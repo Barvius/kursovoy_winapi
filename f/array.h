@@ -69,14 +69,19 @@ void ArrayProcessing() {
 		}
 		break;
 	case 3:
-		if (!(f = fopen("array.txt", "r"))) {
+		if (!(f = fopen("arrayd.txt", "r"))) {
+			tmp_coord.X = init_coord.X;
+			tmp_coord.Y+=5;
+			SetConsoleCursorPosition(hout, tmp_coord);
 			printf("Файл не найден....\n");
-		}
-		else {
+			tmp_coord.Y++;
+			SetConsoleCursorPosition(hout, tmp_coord);
+			system("pause");
+			exit(-1);
+		} else {
 			int i = 0;
 			int n;
 				while (fscanf(f, "%d\n", &input_array[i]) != EOF) {
-					
 					i++;
 				}
 				if (i < Size_of_array - 1) {
@@ -112,10 +117,8 @@ void ArrayProcessing() {
 				}
 				j--;
 				Size_of_array--;
-
 			}
 		}
-
 		if (change) {
 			output_array[Size_of_output_array++] = input_array[i];
 			for (int k = i; k < Size_of_array; k++) {
@@ -131,8 +134,8 @@ void ArrayProcessing() {
 
 	for (int i = 0, yk = 0; i < tmp_Size_of_array; i++, yk += 3) {
 		point = init_coord;
-		point.X += yk; // сдваг следующего прямоугольника
-		SetConsoleCursorPosition(hout, point);// следом за прямоугольником двигаем курсор
+		point.X += yk;
+		SetConsoleCursorPosition(hout, point);
 		for (int j = 0; j < Size_of_output_array; j++) {
 			if (tmp_array[i] == output_array[j]) {
 				FillConsoleOutputAttribute(hout, abs(tmp_array[i]) << 4, 3, point, &l);
@@ -145,9 +148,7 @@ void ArrayProcessing() {
 				SetConsoleTextAttribute(hout, BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_INTENSITY | 0);
 				printf("%d", tmp_array[i]);
 			}
-
 		}
-
 	}
 	init_coord.Y += 2;
 	SetConsoleCyanColor();
@@ -156,8 +157,6 @@ void ArrayProcessing() {
 	for (int i = 0; i < Size_of_output_array; i++) {
 		printf("%d ", output_array[i]);
 	}
-
 	delete[] output_array;
 	delete[] input_array;
-
 }

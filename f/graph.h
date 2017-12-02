@@ -70,9 +70,6 @@ void panel(int panel_x, int panel_y, COLORREF color, char *text) {
 	}
 }
 
-
-
-
 void SetConsoleCyanColor() {
 	SetConsoleTextAttribute(hout, 0 | BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_INTENSITY);
 }

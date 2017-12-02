@@ -15,9 +15,9 @@
 
 
 int main() {
-	//setlocale(0, "rus");
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
+	setlocale(LC_ALL, "Russian");
 	int size_x, size_y, panel_x, panel_y;
 	size_x = 150;
 	size_y = 50;
@@ -37,7 +37,7 @@ int main() {
 		return -2;
 	}
 	GetClientRect(hWnd, &Rect);
-	char *S[] = { "Обработка массива","График функции","Работа с файлами ","Выход " };
+	char *S[] = { "Обработка массива","Работа с файлами","График функции","Выход " };
 	int m = 0;
 	DWORD l;
 	COORD c;
@@ -49,17 +49,15 @@ int main() {
 		panel(panel_x, panel_y, RGB(0, 128, 128), "");
 		Menu M = menu_init(S, (Rect.right / 2) - (size_x / 2), (Rect.bottom / 2) - (size_y * 4 / 2) - 10 * 4, size_x, size_y, 4);// текст,лево,право,размер размер, колво пунктов
 		m = menu_vert(&M);
-
-
 		switch (m){
 		case 0:
 			ArrayProcessing();
 			break;
 		case 1:
-			ChartProcessing();
+			FilesProcessing();
 			break;
 		case 2:
-			FilesProcessing();
+			ChartProcessing();
 			break;
 		}
 		_getch();

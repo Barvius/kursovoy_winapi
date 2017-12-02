@@ -8,6 +8,8 @@ void FilesProcessing() {
 	int j=0, i,col_i=0;
 	if (!(f = fopen("text.txt", "r"))) {
 		printf("Файл не найден....\n");
+		system("pause");
+		exit(-1);
 	} else {
 		while (fgets(b, 100, f)) {
 			col_i++;
@@ -28,47 +30,54 @@ void FilesProcessing() {
 			j++;	
 		}
 		fclose(f);
-		
-		
-		
-		char *tmp;
-		int k;
+		char *tmp_l, *tmp_r;
+		int k, s;
 		int len;
 		for (i = 0; i < col_i; i++) {
 			for (j = 0; j < strlen(glasn); j++) {
 				for (k = 0; k < strlen(text[i]);k++) {
 					if (text[i][k] == glasn[j]) {
-						tmp = new char[strlen(text[i]) + 2];
-						strcpy(tmp, text[i]);
-						delete[] text[i];
-						text[i] = new char[strlen(tmp)+2];
-						strcpy(text[i], tmp);
-						for (int a = strlen(text[i])+1; a > k+1;a--) {
-							char tmm = text[i][a];
-							text[i][a] = text[i][a-1];
-							text[i][a - 1] = tmm;
+						size_t size = strlen(text[i]);
+						tmp_l = new char[k + 2];
+						tmp_r = new char[size-k+1];
+						strncpy(tmp_l, text[i], k + 1);
+						tmp_l[k+1] = '\0';
+
+						s = 0;
+						for (int a = k+1; a < size; a++) {
+							tmp_r[s] = text[i][a];
+							s++;
 						}
-						text[i][k + 1] = ',';
-						delete[] tmp;
+						tmp_r[s] = '\0';
+
+						delete[] text[i];
+						text[i] = new char[size + 2]{'\0'};
+
+						strcat(text[i], tmp_l);
+						strcat(text[i], ",");
+						strcat(text[i], tmp_r);
+						
+						
+						delete[] tmp_l;
+						delete[] tmp_r;
 					}
 				}
 				
 			}
 		}
-		c.Y++;
+		f = fopen("out.txt", "w+");
 		for (i = 0; i < col_i; i++) {
-			SetConsoleCursorPosition(hout, c);
-			puts(text[i]);
-			c.Y++;
-		}
-		f = fopen("out.txt", "w+");// открываем файл в котором будут результаты работы программы
-		for (i = 0; i < col_i; i++) {
-			if (text[i][0]) {// поидеи можно и без него, пробуй
-				//printf(text[i]);
-				fputs(text[i], f);// построчно загоняем массив в файл
+			if (text[i][0]) {
+				fputs(text[i], f);
 			}
 		}
-		fclose(f);// закрываем 
-		//panel(400, 500, RGB(0, 255, 255), text[0]);
+		fseek(f,SEEK_SET,0);
+		c.Y++;
+		while (fgets(b, 100, f)) {
+			SetConsoleCursorPosition(hout, c);
+			puts(b);
+			c.Y++;
+		}
+		fclose(f);
 	}
 }

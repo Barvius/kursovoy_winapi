@@ -3,18 +3,18 @@
 #define DX 20
 #define DY 20
 
-//charts
-//
 float f_charts_1(float x) {
 	return cos(x) / sqrt(powf(x, 2) + 1);
 }
+
 float f_charts_2(float x) {
 	return powf(x, 2) / (exp(x) - 1);
 }
+
 float f_charts_3(float x) {
 	return x*exp(-x);
 }
-//
+
 void mashtab(float xn, float xk, float *mx, float *my, float *miny, float *maxy, float(*func)(float)) {
 	float x, y, dx;
 	x = xn;
@@ -62,7 +62,6 @@ void setka(int osx, int osy, float minx, float maxx, float miny, float maxy, flo
 	SetBkColor(hDC, RGB(255, 255, 255));
 	TextOut(hDC, osy - 20, Rect.top + DY - 8, (LPCSTR)"Y", 1);
 	TextOut(hDC, Rect.right - DX + 2, osx - 20, (LPCSTR)"X", 1);
-	//построение сетки
 	float dx, x, y;
 	int xt, yt;
 	RECT d;
@@ -93,22 +92,18 @@ void grafik(HPEN hPen, float minx, float maxx, float miny, float mx, float my, f
 	int xt, yt;
 	dx = (maxx - minx) / 200;
 	hOldPen = (HPEN)SelectObject(hDC, hPen);
-	//расчет координат начальной точки функции	
 	x = minx;
 	y = func(x);
 	xt = Rect.left + (x - minx)*mx + DX;
 	yt = Rect.bottom - (y - miny)*my - DY;
 	MoveToEx(hDC, xt, yt, NULL);
-	//построение графика
 	do {
 		x = x + dx;
 		y = func(x);
-
 		xt = Rect.left + (x - minx)*mx + DX;
 		yt = Rect.bottom - (y - miny)*my - DY;
 		LineTo(hDC, xt, yt);
 	} while (x<maxx - dx);
-	//printf("%d %d\n", xt,yt);
 	SelectObject(hDC, hOldPen);
 	DeleteObject(hPen);
 }
@@ -121,19 +116,17 @@ void chart_draw(float xn, float xk, float(*charts_function)(float)) {
 	COLORREF chart_color = RGB(0, 0, 0);
 	int chart_type = PS_SOLID;
 	HPEN chart_pen;
-
 	DWORD l;
 	COORD point, init_coord;
 	point.X = 0; point.Y = 0;
 	init_coord.X = 12;
 	init_coord.Y = 5;
-
 	system("cls");
-	FillConsoleOutputAttribute(hout, 0, 20000, point, &l); // очистка экрана
+	FillConsoleOutputAttribute(hout, 0, 20000, point, &l);
 	clearscreen(0, 0, 255);
 	panel(400, 500, RGB(0, 255, 255), "График функции \n ---------------------------------------");
 	SetConsoleCyanColor();
-	char S[20];
+	char S[30];
 	float x, y, dx;
 	x = xn;
 	dx = (xk - xn) / 30;
@@ -143,7 +136,6 @@ void chart_draw(float xn, float xk, float(*charts_function)(float)) {
 	while (x <= xk) {
 		y = charts_function(x);
 		sprintf(S, "|%-8.4f | %-8.4f|", x, y);
-
 		PrintLine(init_coord, S, 1);
 		x = x + dx;
 	}
@@ -156,7 +148,6 @@ void chart_draw(float xn, float xk, float(*charts_function)(float)) {
 		osi(xn, xk, miny, maxy, mx, my, &osx, &osy);
 		setka(osx, osy, xn, xk, miny, maxy, mx, my);
 		grafik(chart_pen, xn, xk, miny, mx, my, charts_function);
-
 		ch = _getch();
 		switch (ch) {
 		case 61: //+
@@ -189,30 +180,17 @@ void chart_draw(float xn, float xk, float(*charts_function)(float)) {
 	} while (ch != 27);
 
 }
-//charts
-// menu
-
-
-
-
 
 void ChartProcessing() {
 	float(*charts_function)(float);
 	int xn = 0, xk = 0;
-
 	int size_x = 150;
 	int size_y = 50;
-	int panel_x = 400;
-	int panel_y = 300;
-	char *S[] = { "cosx/sqrt(x^2+1)","x^2/e^x-1","x*e^(-x)" };
+
+	char *P[] = { "cosx/sqrt(x^2+1)","x^2/e^x-1","x*e^(-x)" };
 	int m = 0;
-	//do {
-	//clearscreen(0,0,255);
-	//panel(panel_x, panel_y, RGB(0, 128, 128), "");
-	Menu M = menu_init(S, (Rect.right / 2) - (size_x / 2) + 160, (Rect.bottom / 2) - (size_y * 4 / 2) - 10 * 4 + 100, size_x, size_y, 3);// текст,лево,право,размер размер, колво пунктов
+	Menu M = menu_init(P, (Rect.right / 2) - (size_x / 2) + 170, (Rect.bottom / 2) - (size_y * 4 / 2) - 10 * 4 + 100, size_x, size_y, 3);// текст,лево,право,размер размер, колво пунктов
 	m = menu_vert(&M);
-
-
 	switch (m) {
 	case 0:
 		charts_function = f_charts_1;
@@ -230,8 +208,5 @@ void ChartProcessing() {
 		xk = 2;
 		break;
 	}
-	//} while (m != 3);
-
 	chart_draw(xn, xk, charts_function);
-
 }
