@@ -51,13 +51,7 @@ void osi(float minx, float maxx, float miny, float maxy, float mx, float my, int
 void setka(int osx, int osy, float minx, float maxx, float miny, float maxy, float mx, float my) {
 	hPen = CreatePen(PS_SOLID, 1, RGB(0, 0, 255));
 	hOldPen = (HPEN)SelectObject(hDC, hPen);
-	Lf.lfHeight = 12;
-	Lf.lfWeight = 900;
-	Lf.lfWidth = 8;
 	CHAR S[20];
-	strcpy((char*)Lf.lfFaceName, "Times New Roman");
-	hFont = CreateFontIndirect(&Lf);
-	hOldFont = (HFONT)SelectObject(hDC, hFont);
 	SetTextColor(hDC, RGB(0, 0, 0));
 	SetBkColor(hDC, RGB(255, 255, 255));
 	TextOut(hDC, osy - 20, Rect.top + DY - 8, (LPCSTR)"Y", 1);
@@ -83,8 +77,6 @@ void setka(int osx, int osy, float minx, float maxx, float miny, float maxy, flo
 	}
 	SelectObject(hDC, hOldPen);
 	DeleteObject(hPen);
-	SelectObject(hDC, hOldFont);
-	DeleteObject(hFont);
 }
 
 void grafik(HPEN hPen, float minx, float maxx, float miny, float mx, float my, float(*func)(float)) {
